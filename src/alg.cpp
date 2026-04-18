@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include "tstack.h"
+#include <cctype>
 
 int prioritet(char oper) {
     if (oper == '+' || oper == '-') return 1;
@@ -15,8 +16,8 @@ std::string infx2pstfx(const std::string& inf) {
     for (int i = 0; i < inf.size(); i++) {
         char c = inf[i];
         if (c == ' ') continue;
-        if (c >= '0' && c <= '9') {
-            while (i < inf.size() && inf[i] >= '0' && inf[i] <= '9') {
+        if (std::isdigit(c)) {
+            while (i < inf.size() && std::isdigit(inf[i])) {
                 rez += inf[i];
                 i++;
             }
@@ -27,12 +28,12 @@ std::string infx2pstfx(const std::string& inf) {
             stack.push(c);
         }
         else if (c == ')') {
-            while (stack.get() != '(') {
+            while (!stack.isEmpty() && stack.get() != '(') {
                 rez += stack.get();
                 rez += ' ';
                 stack.pop();
             }
-            stack.pop();  
+            stack.pop();
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/') {
 
@@ -41,7 +42,7 @@ std::string infx2pstfx(const std::string& inf) {
                 rez += ' ';
                 stack.pop();
             }
-            stack.push(c);  
+            stack.push(c);
         }
     }
     while (!stack.isEmpty()) {
@@ -57,14 +58,13 @@ std::string infx2pstfx(const std::string& inf) {
 
 int eval(const std::string& pref) {
     TStack<int, 100> stack;
-
     for (int i = 0; i < pref.size(); i++) {
         char c = pref[i];
         if (c == ' ') continue;
 
-        if (c >= '0' && c <= '9') {
+        if (std::isdigit(c)) {
             int num = 0;
-            while (i < pref.size() && pref[i] >= '0' && pref[i] <= '9') {
+            while (i < pref.size() && std::isdigit(pref[i])) {
                 num = num * 10 + (pref[i] - '0');
                 i++;
             }
