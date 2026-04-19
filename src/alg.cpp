@@ -1,8 +1,9 @@
 // Copyright 2025 NNTU-CS
-#include <string>
-#include <map>
-#include "tstack.h"
 #include <cctype>
+#include <map>
+#include <string>
+
+#include "tstack.h"
 
 int prioritet(char oper) {
     if (oper == '+' || oper == '-') return 1;
@@ -15,7 +16,9 @@ std::string infx2pstfx(const std::string& inf) {
     std::string rez = "";
     for (int i = 0; i < inf.size(); i++) {
         char c = inf[i];
-        if (c == ' ') continue;
+        if (c == ' ') {
+            continue;
+        }
         if (std::isdigit(c)) {
             while (i < inf.size() && std::isdigit(inf[i])) {
                 rez += inf[i];
@@ -23,21 +26,20 @@ std::string infx2pstfx(const std::string& inf) {
             }
             rez += ' ';
             i--;
-        }
-        else if (c == '(') {
+        } else if (c == '(') {
             stack.push(c);
-        }
-        else if (c == ')') {
+        } else if (c == ')') {
             while (!stack.isEmpty() && stack.get() != '(') {
                 rez += stack.get();
                 rez += ' ';
                 stack.pop();
             }
             stack.pop();
-        }
-        else if (c == '+' || c == '-' || c == '*' || c == '/') {
-
-            while (!stack.isEmpty() && stack.get() != '(' && prioritet(stack.get()) >= prioritet(c)) {
+        } else if (c == '+' || c == '-' ||
+            c == '*' || c == '/') {
+            while (!stack.isEmpty() &&
+                stack.get() != '(' &&
+                prioritet(stack.get()) >= prioritet(c)) {
                 rez += stack.get();
                 rez += ' ';
                 stack.pop();
@@ -70,8 +72,7 @@ int eval(const std::string& pref) {
             }
             stack.push(num);
             i--;
-        }
-        else if (c == '+' || c == '-' || c == '*' || c == '/') {
+        } else if (c == '+' || c == '-' || c == '*' || c == '/') {
             int b = stack.get(); stack.pop();
             int a = stack.get(); stack.pop();
             if (c == '+') stack.push(a + b);
